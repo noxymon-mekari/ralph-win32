@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2026-01-19
+
+### Added
+- Windows batch script support for all bash scripts:
+  - `ralph.cmd` - Windows equivalent of `ralph.sh` (looped runner)
+  - `ralph-once.cmd` - Windows equivalent of `ralph-once.sh` (single run)
+  - `test/run-prompts.cmd` - Windows equivalent of `test/run-prompts.sh` (test harness)
+- Windows-specific examples in README.md and prompts/README.md
+
+### Changed
+- Documentation updated to include both Linux/macOS and Windows command examples
+
 ## [1.1.0] - 2026-01-12
 
 ### Added

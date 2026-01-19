@@ -49,21 +49,16 @@ if "%MODEL%"=="" set MODEL=gpt-5.2
 
 set LOG_ROOT=%ROOT%
 
-REM Create timestamp for this run
-for /f "tokens=1-6 delims=/:. " %%a in ("%date% %time%") do (
-    set year=%%c
-    set month=%%a
-    set day=%%b
-    set hour=%%d
-    set minute=%%e
-    set second=%%f
+REM Create timestamp for this run (locale-independent)
+for /f "tokens=1-6 delims=." %%a in ('wmic os get localdatetime ^| findstr /r "^[0-9]"') do (
+    set datetime=%%a
 )
-REM Pad with zeros
-if "%month:~1%"=="" set month=0%month%
-if "%day:~1%"=="" set day=0%day%
-if "%hour:~1%"=="" set hour=0%hour%
-if "%minute:~1%"=="" set minute=0%minute%
-if "%second:~1%"=="" set second=0%second%
+set year=%datetime:~0,4%
+set month=%datetime:~4,2%
+set day=%datetime:~6,2%
+set hour=%datetime:~8,2%
+set minute=%datetime:~10,2%
+set second=%datetime:~12,2%
 set TS=%year%%month%%day%T%hour%%minute%%second%Z
 
 set RUN_LOG_DIR=%LOG_ROOT%\test\log\%TS%

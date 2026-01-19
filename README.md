@@ -11,6 +11,8 @@ Ralph runs **GitHub Copilot CLI** in a loop, implementing one feature at a time 
 
 ## Quick Start
 
+**Linux/macOS:**
+
 ```bash
 # Clone and enter the repo
 git clone https://github.com/soderlind/ralph
@@ -23,6 +25,22 @@ cd ralph
 
 # Run multiple iterations
 ./ralph.sh --prompt prompts/default.txt --prd plans/prd.json --allow-profile safe 10
+```
+
+**Windows:**
+
+```cmd
+REM Clone and enter the repo
+git clone https://github.com/soderlind/ralph
+cd ralph
+
+REM Add your work items to plans\prd.json
+
+REM Test with a single run
+ralph-once.cmd --prompt prompts\default.txt --prd plans\prd.json --allow-profile safe
+
+REM Run multiple iterations
+ralph.cmd --prompt prompts\default.txt --prd plans\prd.json --allow-profile safe 10
 ```
 
 Check `progress.txt` for a log of what was done.
@@ -60,8 +78,15 @@ https://github.com/user-attachments/assets/28206ee1-8dad-4871-aef5-1a9f24625dba
 
 Set the `MODEL` environment variable (default: `gpt-5.2`):
 
+**Linux/macOS:**
 ```bash
 MODEL=claude-opus-4.5 ./ralph.sh --prompt prompts/default.txt --prd plans/prd.json --allow-profile safe 10
+```
+
+**Windows:**
+```cmd
+set MODEL=claude-opus-4.5
+ralph.cmd --prompt prompts\default.txt --prd plans\prd.json --allow-profile safe 10
 ```
 
 ### Define Your Work Items
@@ -92,8 +117,14 @@ See the [`plans/`](plans/) folder for more context.
 
 Prompts are required. Use any prompt file:
 
+**Linux/macOS:**
 ```bash
 ./ralph.sh --prompt prompts/my-prompt.txt --allow-profile safe 10
+```
+
+**Windows:**
+```cmd
+ralph.cmd --prompt prompts\my-prompt.txt --allow-profile safe 10
 ```
 
 > **Note:** Custom prompts require `--allow-profile` or `--allow-tools`.
@@ -102,36 +133,66 @@ Prompts are required. Use any prompt file:
 
 ## Command Reference
 
-### `ralph.sh` — Looped Runner
+### `ralph.sh` / `ralph.cmd` — Looped Runner
 
 Runs Copilot up to N iterations. Stops early on `<promise>COMPLETE</promise>`.
 
+**Linux/macOS:**
 ```bash
 ./ralph.sh [options] <iterations>
 ```
 
+**Windows:**
+```cmd
+ralph.cmd [options] <iterations>
+```
+
 **Examples:**
 
+**Linux/macOS:**
 ```bash
 ./ralph.sh --prompt prompts/default.txt --prd plans/prd.json --allow-profile safe 10
 ./ralph.sh --prompt prompts/wp.txt --allow-profile safe 10
 MODEL=claude-opus-4.5 ./ralph.sh --prompt prompts/default.txt --prd plans/prd.json --allow-profile safe 10
 ```
 
-### `ralph-once.sh` — Single Run
+**Windows:**
+```cmd
+ralph.cmd --prompt prompts\default.txt --prd plans\prd.json --allow-profile safe 10
+ralph.cmd --prompt prompts\wp.txt --allow-profile safe 10
+set MODEL=claude-opus-4.5
+ralph.cmd --prompt prompts\default.txt --prd plans\prd.json --allow-profile safe 10
+```
+
+### `ralph-once.sh` / `ralph-once.cmd` — Single Run
 
 Runs Copilot once. Great for testing.
 
+**Linux/macOS:**
 ```bash
 ./ralph-once.sh [options]
 ```
 
+**Windows:**
+```cmd
+ralph-once.cmd [options]
+```
+
 **Examples:**
 
+**Linux/macOS:**
 ```bash
 ./ralph-once.sh --prompt prompts/default.txt --prd plans/prd.json --allow-profile safe
 ./ralph-once.sh --prompt prompts/wp.txt --allow-profile locked
 MODEL=claude-opus-4.5 ./ralph-once.sh --prompt prompts/default.txt --prd plans/prd.json --allow-profile safe
+```
+
+**Windows:**
+```cmd
+ralph-once.cmd --prompt prompts\default.txt --prd plans\prd.json --allow-profile safe
+ralph-once.cmd --prompt prompts\wp.txt --allow-profile locked
+set MODEL=claude-opus-4.5
+ralph-once.cmd --prompt prompts\default.txt --prd plans\prd.json --allow-profile safe
 ```
 
 ### Options
@@ -164,8 +225,14 @@ MODEL=claude-opus-4.5 ./ralph-once.sh --prompt prompts/default.txt --prd plans/p
 
 **Custom tools:** If you pass `--allow-tools`, it replaces the profile defaults:
 
+**Linux/macOS:**
 ```bash
 ./ralph.sh --prompt prompts/wp.txt --allow-tools write --allow-tools 'shell(composer:*)' 10
+```
+
+**Windows:**
+```cmd
+ralph.cmd --prompt prompts\wp.txt --allow-tools write --allow-tools "shell(composer:*)" 10
 ```
 
 ---
@@ -174,6 +241,7 @@ MODEL=claude-opus-4.5 ./ralph-once.sh --prompt prompts/default.txt --prd plans/p
 
 Try Ralph in a safe sandbox:
 
+**Linux/macOS:**
 ```bash
 # Setup
 git clone https://github.com/soderlind/ralph && cd ralph
@@ -192,18 +260,40 @@ cat progress.txt
 cd .. && git worktree remove ralph-demo && git branch -D ralph-demo
 ```
 
+**Windows:**
+```cmd
+REM Setup
+git clone https://github.com/soderlind/ralph && cd ralph
+git worktree add ..\ralph-demo -b ralph-demo
+cd ..\ralph-demo
+
+REM Run
+ralph-once.cmd --prompt prompts\default.txt --prd plans\prd.json --allow-profile safe
+ralph.cmd --prompt prompts\default.txt --prd plans\prd.json --allow-profile safe 10
+
+REM Inspect
+git log --oneline -20
+type progress.txt
+
+REM Cleanup
+cd .. && git worktree remove ralph-demo && git branch -D ralph-demo
+```
+
 ---
 
 ## Project Structure
 
 ```
 .
-├── plans/prd.json        # Your work items
-├── prompts/default.txt   # Example prompt
-├── progress.txt          # Running log
-├── ralph.sh              # Looped runner
-├── ralph-once.sh         # Single-run script
-└── test/run-prompts.sh   # Test harness
+├── plans/prd.json         # Your work items
+├── prompts/default.txt    # Example prompt
+├── progress.txt           # Running log
+├── ralph.sh               # Looped runner (Linux/macOS)
+├── ralph.cmd              # Looped runner (Windows)
+├── ralph-once.sh          # Single-run script (Linux/macOS)
+├── ralph-once.cmd         # Single-run script (Windows)
+├── test/run-prompts.sh    # Test harness (Linux/macOS)
+└── test/run-prompts.cmd   # Test harness (Windows)
 ```
 
 ---
@@ -230,11 +320,17 @@ winget upgrade GitHub.Copilot
 
 Run all prompts in isolated worktrees:
 
+**Linux/macOS:**
 ```bash
 ./test/run-prompts.sh
 ```
 
-Logs: `test/log/`
+**Windows:**
+```cmd
+test\run-prompts.cmd
+```
+
+Logs: `test/log/` (Linux/macOS) or `test\log\` (Windows)
 
 ---
 
@@ -282,12 +378,18 @@ Pass a comma-separated list (repeatable):
 
 Example:
 
+**Linux/macOS:**
 ```bash
 ./ralph.sh --prompt prompts/wordpress-plugin-agent.txt \
   --skill wp-block-development,wp-cli \
   --prd plans/prd.json \
   --allow-profile safe \
   5
+```
+
+**Windows:**
+```cmd
+ralph.cmd --prompt prompts\wordpress-plugin-agent.txt --skill wp-block-development,wp-cli --prd plans\prd.json --allow-profile safe 5
 ```
 
 ---
